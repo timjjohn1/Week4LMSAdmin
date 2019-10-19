@@ -71,19 +71,19 @@ public class AdminController
 	{
 		// make sure the id is null, and the other fields aren't
 		if(book.getBookId() != null || book.getTitle() == null || "".contentEquals(book.getTitle())
-									|| book.getAuthorId() == null || book.getPublisherId() == null)
+									|| book.getAuthor().getAuthorId() == null || book.getPublisher().getPublisherId() == null)
 		{
 			return new ResponseEntity<Book>(HttpStatus.BAD_REQUEST);
 		}
 		
 		// check author exists
-		if(!admin.readAuthorById(book.getAuthorId()).isPresent()) 
+		if(!admin.readAuthorById(book.getAuthor().getAuthorId()).isPresent()) 
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		
 		// check publisher exists
-		if(!admin.readPublisherById(book.getPublisherId()).isPresent())
+		if(!admin.readPublisherById(book.getPublisher().getPublisherId()).isPresent())
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
@@ -289,7 +289,8 @@ public class AdminController
 				produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<BookLoan> readBookLoanByAllId(@PathVariable("cardNo") Integer cardNo, @PathVariable("branchId") Integer branchId, @PathVariable("bookId") Integer bookId)
 	{
-		Optional<BookLoan> result = admin.readBookLoanById(new BookLoanCompositeKey(cardNo,branchId,bookId));
+		// TODO fill those constructors my guy
+		Optional<BookLoan> result = admin.readBookLoanById(new BookLoanCompositeKey(new Book(), new LibraryBranch(), new Borrower()));
 		
 		if(!result.isPresent()) 
 		{
@@ -369,7 +370,7 @@ public class AdminController
 	public ResponseEntity<Book> updateBook(@PathVariable Integer bookId, @RequestBody Book book)
 	{
 		if(book.getBookId() != null || book.getTitle() == null || "".contentEquals(book.getTitle())
-				|| book.getAuthorId() == null || book.getPublisherId() == null)
+				|| book.getAuthor().getAuthorId() == null || book.getPublisher().getPublisherId() == null)
 		{
 			return new ResponseEntity<Book>(HttpStatus.BAD_REQUEST);
 		}
@@ -381,13 +382,13 @@ public class AdminController
 		}
 		
 		// check new author exists
-		if(!admin.readAuthorById(book.getAuthorId()).isPresent()) 
+		if(!admin.readAuthorById(book.getAuthor().getAuthorId()).isPresent()) 
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
 		
 		// check new publisher exists
-		if(!admin.readPublisherById(book.getPublisherId()).isPresent())
+		if(!admin.readPublisherById(book.getPublisher().getPublisherId()).isPresent())
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
@@ -445,22 +446,23 @@ public class AdminController
 	{
 		// all IDs must be null in the body, and then assigned from the URI
 		// dateOut must also be null, and is to be filled in using the existing data in the DB
-		if(bookLoan.getCardNo() != null || bookLoan.getBranchId() != null || bookLoan.getBookId() != null || bookLoan.getDateOut() != null) 
+		if(bookLoan.getBookLoanKey().getBorrower().getCardNo() != null || bookLoan.getBookLoanKey().getBranch().getBranchId() != null || bookLoan.getBookLoanKey().getBook().getBookId() != null || bookLoan.getDateOut() != null) 
 		{
 			return new ResponseEntity<BookLoan>(HttpStatus.BAD_REQUEST);
 		}
 		
 		// once each ID exists, we need to check that entry exists and we need to retrieve the existing dateOut data
-		Optional<BookLoan> existingData = admin.readBookLoanById(new BookLoanCompositeKey(cardNo,branchId,bookId));
+		// TODO fill in constructors
+		Optional<BookLoan> existingData = admin.readBookLoanById(new BookLoanCompositeKey(new Book(), new LibraryBranch(), new Borrower()));
 		
 		if(!existingData.isPresent()) 
 		{
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
 		
-		bookLoan.setCardNo(cardNo);
-		bookLoan.setBranchId(branchId);
-		bookLoan.setBookId(bookId);
+		bookLoan.getBookLoanKey().getBorrower().setCardNo(cardNo);
+		bookLoan.getBookLoanKey().getBranch().setBranchId(branchId);
+		bookLoan.getBookLoanKey().getBook().setBookId(bookId);
 		bookLoan.setDateOut(existingData.get().getDateOut());
 
 		return new ResponseEntity<BookLoan>(admin.saveBookLoan(bookLoan), HttpStatus.OK);
