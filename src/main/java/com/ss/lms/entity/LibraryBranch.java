@@ -30,11 +30,11 @@ public class LibraryBranch implements Serializable
 	private String branchAddress;
 
 	// ONE branch may loan MANY books
-	@OneToMany(mappedBy = "bookLoanKey.book", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bookLoanKey.branch")
 	private Collection<BookLoan> loanedBooks;
 	
 	// ONE branch may own MANY books
-	@OneToMany(mappedBy = "bookCopyKey.book", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bookCopyKey.branch")
 	private Collection<BookCopy> bookCopies;
 	
 	public LibraryBranch(){}

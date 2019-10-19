@@ -3,7 +3,6 @@ package com.ss.lms.entity;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,10 +43,19 @@ public class Book implements Serializable
 	private Collection<BookLoan> givenBooks;
 	
 	// ONE book may be owned by MANY different libraries
-	@OneToMany(mappedBy = "bookCopyKey.branch")
+	@OneToMany(mappedBy = "bookCopyKey.book")
 	private Collection<BookCopy> existingCopies;
 	
 	public Book() {}
+
+	public Book(Integer bookId, String title, Author author, Publisher publisher)
+	{
+		super();
+		this.bookId = bookId;
+		this.title = title;
+		this.author = author;
+		this.publisher = publisher;
+	}
 
 	@Override
 	public int hashCode()

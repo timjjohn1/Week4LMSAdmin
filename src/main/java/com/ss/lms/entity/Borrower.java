@@ -34,7 +34,7 @@ public class Borrower implements Serializable
 	private String phone;
 	
 	// ONE borrower may borrow MANY books
-	@OneToMany(mappedBy = "bookLoanKey.borrower", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "bookLoanKey.borrower")
 	private Collection<BookLoan> borrowedBooks;
 
 	public Borrower(){}

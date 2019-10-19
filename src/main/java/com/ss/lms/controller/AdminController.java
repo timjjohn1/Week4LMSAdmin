@@ -289,8 +289,33 @@ public class AdminController
 				produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<BookLoan> readBookLoanByAllId(@PathVariable("cardNo") Integer cardNo, @PathVariable("branchId") Integer branchId, @PathVariable("bookId") Integer bookId)
 	{
-		// TODO fill those constructors my guy
-		Optional<BookLoan> result = admin.readBookLoanById(new BookLoanCompositeKey(new Book(), new LibraryBranch(), new Borrower()));
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<Borrower> foundBorrower = admin.readBorrowerById(cardNo);
+		if(!foundBorrower.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<LibraryBranch> foundBranch = admin.readLibraryBranchById(branchId);
+		if(!foundBranch.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<Book> foundBook = admin.readBookById(bookId);
+		if(!foundBook.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+		
+		// see if this combination of keys exists
+		Optional<BookLoan> result = admin.readBookLoanById(
+				new BookLoanCompositeKey(
+						foundBook.get(),
+						foundBranch.get(), 
+						foundBorrower.get()));
 		
 		if(!result.isPresent()) 
 		{
@@ -330,7 +355,6 @@ public class AdminController
 	{
 		if(author.getAuthorId() != null || author.getAuthorName() == null || "".contentEquals(author.getAuthorName())) 
 		{
-			System.out.println("i made it to the null check !");
 			return new ResponseEntity<Author>(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -446,14 +470,42 @@ public class AdminController
 	{
 		// all IDs must be null in the body, and then assigned from the URI
 		// dateOut must also be null, and is to be filled in using the existing data in the DB
-		if(bookLoan.getBookLoanKey().getBorrower().getCardNo() != null || bookLoan.getBookLoanKey().getBranch().getBranchId() != null || bookLoan.getBookLoanKey().getBook().getBookId() != null || bookLoan.getDateOut() != null) 
+		if(bookLoan.getBookLoanKey().getBorrower().getCardNo() != null ||
+				bookLoan.getBookLoanKey().getBranch().getBranchId() != null ||
+				bookLoan.getBookLoanKey().getBook().getBookId() != null ||
+				bookLoan.getDateOut() != null) 
 		{
+			System.out.println("null ID");
 			return new ResponseEntity<BookLoan>(HttpStatus.BAD_REQUEST);
 		}
 		
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<Borrower> foundBorrower = admin.readBorrowerById(cardNo);
+		if(!foundBorrower.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<LibraryBranch> foundBranch = admin.readLibraryBranchById(branchId);
+		if(!foundBranch.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+
+		// FILLING IN THE COMPOSITE KEY 
+		Optional<Book> foundBook = admin.readBookById(bookId);
+		if(!foundBook.isPresent()) 
+		{
+			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
+		}
+
 		// once each ID exists, we need to check that entry exists and we need to retrieve the existing dateOut data
-		// TODO fill in constructors
-		Optional<BookLoan> existingData = admin.readBookLoanById(new BookLoanCompositeKey(new Book(), new LibraryBranch(), new Borrower()));
+		Optional<BookLoan> existingData = admin.readBookLoanById(
+				new BookLoanCompositeKey(
+						foundBook.get(),
+						foundBranch.get(), 
+						foundBorrower.get()));
 		
 		if(!existingData.isPresent()) 
 		{
