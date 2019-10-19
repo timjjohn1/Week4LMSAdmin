@@ -75,17 +75,27 @@ public class AdminController
 		{
 			return new ResponseEntity<Book>(HttpStatus.BAD_REQUEST);
 		}
-		
-		// check author exists
-		if(!admin.readAuthorById(book.getAuthor().getAuthorId()).isPresent()) 
+
+		// check author exists and fill the embedded fields
+		Optional<Author> foundAuthor = admin.readAuthorById(book.getAuthor().getAuthorId());
+		if(!foundAuthor.isPresent()) 
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
 		}
+		else 
+		{
+			book.setAuthor(foundAuthor.get());
+		}
 		
-		// check publisher exists
-		if(!admin.readPublisherById(book.getPublisher().getPublisherId()).isPresent())
+		// check publisher exists and fill the embedded fields
+		Optional<Publisher> foundPublisher = admin.readPublisherById(book.getPublisher().getPublisherId());
+		if(!foundPublisher.isPresent())
 		{
 			return new ResponseEntity<Book>(HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		else 
+		{
+			book.setPublisher(foundPublisher.get());
 		}
 		
 		// create the entity
@@ -394,7 +404,8 @@ public class AdminController
 	public ResponseEntity<Book> updateBook(@PathVariable Integer bookId, @RequestBody Book book)
 	{
 		if(book.getBookId() != null || book.getTitle() == null || "".contentEquals(book.getTitle())
-				|| book.getAuthor().getAuthorId() == null || book.getPublisher().getPublisherId() == null)
+									|| book.getAuthor() == null || book.getAuthor().getAuthorId() == null 
+									|| book.getPublisher() == null || book.getPublisher().getPublisherId() == null)
 		{
 			return new ResponseEntity<Book>(HttpStatus.BAD_REQUEST);
 		}
@@ -470,12 +481,9 @@ public class AdminController
 	{
 		// all IDs must be null in the body, and then assigned from the URI
 		// dateOut must also be null, and is to be filled in using the existing data in the DB
-		if(bookLoan.getBookLoanKey().getBorrower().getCardNo() != null ||
-				bookLoan.getBookLoanKey().getBranch().getBranchId() != null ||
-				bookLoan.getBookLoanKey().getBook().getBookId() != null ||
+		if(bookLoan.getBookLoanKey() != null ||
 				bookLoan.getDateOut() != null) 
 		{
-			System.out.println("null ID");
 			return new ResponseEntity<BookLoan>(HttpStatus.BAD_REQUEST);
 		}
 		
@@ -501,20 +509,19 @@ public class AdminController
 		}
 
 		// once each ID exists, we need to check that entry exists and we need to retrieve the existing dateOut data
-		Optional<BookLoan> existingData = admin.readBookLoanById(
-				new BookLoanCompositeKey(
-						foundBook.get(),
-						foundBranch.get(), 
-						foundBorrower.get()));
+		BookLoanCompositeKey bookLoanKey = new BookLoanCompositeKey(
+												foundBook.get(),
+												foundBranch.get(), 
+												foundBorrower.get());
+		
+		Optional<BookLoan> existingData = admin.readBookLoanById(bookLoanKey);
 		
 		if(!existingData.isPresent()) 
 		{
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
 		
-		bookLoan.getBookLoanKey().getBorrower().setCardNo(cardNo);
-		bookLoan.getBookLoanKey().getBranch().setBranchId(branchId);
-		bookLoan.getBookLoanKey().getBook().setBookId(bookId);
+		bookLoan.setBookLoanKey(bookLoanKey);
 		bookLoan.setDateOut(existingData.get().getDateOut());
 
 		return new ResponseEntity<BookLoan>(admin.saveBookLoan(bookLoan), HttpStatus.OK);

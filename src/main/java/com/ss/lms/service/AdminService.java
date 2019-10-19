@@ -138,22 +138,6 @@ public class AdminService
 
 	/*************************************************
 	 * 
-	 * ALL UPDATE OPERATIONS
-	 * 
-	 *************************************************/
-
-//	public void updateAuthor(Author author)
-
-//	public void updatePublisher(Publisher publisher)
-
-//	public void updateBook(Book book)
-
-//	public void updateLibraryBranch(LibraryBranch libraryBranch)
-
-//	public void updateBorrower(Borrower borrower)
-
-	/*************************************************
-	 * 
 	 * ALL DELETE OPERATIONS
 	 * 
 	 *************************************************/
