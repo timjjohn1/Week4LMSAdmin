@@ -31,6 +31,12 @@ public class AdminController
 	@Autowired
 	AdminService admin;
 	
+	@GetMapping(path = "")
+	public HttpStatus isUp() 
+	{
+		return HttpStatus.OK;
+	}
+	
 	/*************************************************
 	 * 
 	 * ALL CREATE OPERATIONS
