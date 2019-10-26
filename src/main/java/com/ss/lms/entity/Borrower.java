@@ -4,7 +4,6 @@ package com.ss.lms.entity;
 import java.io.Serializable;
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
