@@ -7,7 +7,6 @@ public class LmsApplication
 {
 	public static void main(String[] args) 
 	{
-		System.out.println("ADMIN");
 		SpringApplication.run(LmsApplication.class, args);
 	}
 }
