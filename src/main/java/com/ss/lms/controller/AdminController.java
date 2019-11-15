@@ -37,7 +37,7 @@ public class AdminController
 	@GetMapping(path = "")
 	public HttpStatus isUp() 
 	{
-		logger.trace(HttpStatus.OK + " Health");
+		logger.info(HttpStatus.OK + " Health");
 		return HttpStatus.OK;
 	}
 	
@@ -156,12 +156,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Author");
+			logger.info(HttpStatus.NOT_FOUND + " GET Author " + authorId);
 			return new ResponseEntity<Author>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Author");
+			logger.info(HttpStatus.OK + " GET Author " + authorId);
 			return new ResponseEntity<Author>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -174,12 +174,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET Author");
+			logger.info(HttpStatus.OK + " GET Authors 0");
 			return new ResponseEntity<Iterable<Author>>(HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Author");
+			logger.info(HttpStatus.OK + " GET Authors 0 ");
 			return new ResponseEntity<Iterable<Author>>(result, HttpStatus.OK);
 		}
 	}
@@ -191,12 +191,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Publisher");
+			logger.info(HttpStatus.NOT_FOUND + " GET Publisher " + publisherId);
 			return new ResponseEntity<Publisher>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Publisher");
+			logger.info(HttpStatus.OK + " GET Publisher " + publisherId);
 			return new ResponseEntity<Publisher>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -209,12 +209,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET Publisher");
+			logger.info(HttpStatus.OK + " GET Publishers 0 ");
 			return new ResponseEntity<Iterable<Publisher>>(result, HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Publisher");
+			logger.info(HttpStatus.OK + " GET Publishers 0");
 			return new ResponseEntity<Iterable<Publisher>>(result, HttpStatus.OK);
 		}
 	}
@@ -226,12 +226,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Book");
+			logger.info(HttpStatus.NOT_FOUND + " GET Book " + bookId);
 			return new ResponseEntity<Book>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Book");
+			logger.info(HttpStatus.OK + " GET Book " + bookId);
 			return new ResponseEntity<Book>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -244,12 +244,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET Book");
+			logger.info(HttpStatus.OK + " GET Book 0");
 			return new ResponseEntity<Iterable<Book>>(result, HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Book");
+			logger.info(HttpStatus.OK + " GET Book 0");
 			return new ResponseEntity<Iterable<Book>>(result, HttpStatus.OK);
 		}
 	}
@@ -261,12 +261,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET LibraryBranch");
+			logger.info(HttpStatus.NOT_FOUND + " GET LibraryBranch " + branchId);
 			return new ResponseEntity<LibraryBranch>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET LibraryBranch");
+			logger.info(HttpStatus.OK + " GET LibraryBranch " + branchId);
 			return new ResponseEntity<LibraryBranch>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -279,12 +279,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET LibraryBranch");
+			logger.info(HttpStatus.OK + " GET LibraryBranch 0");
 			return new ResponseEntity<Iterable<LibraryBranch>>(result, HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET LibraryBranch");
+			logger.info(HttpStatus.OK + " GET LibraryBranch 0");
 			return new ResponseEntity<Iterable<LibraryBranch>>(result, HttpStatus.OK);
 		}
 	}
@@ -296,12 +296,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Borrower");
+			logger.info(HttpStatus.NOT_FOUND + " GET Borrower " + cardNo);
 			return new ResponseEntity<Borrower>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Borrower");
+			logger.info(HttpStatus.OK + " GET Borrower " + cardNo);
 			return new ResponseEntity<Borrower>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -314,12 +314,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET Borrower");
+			logger.info(HttpStatus.OK + " GET Borrower 0");
 			return new ResponseEntity<Iterable<Borrower>>(result, HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET Borrower");
+			logger.info(HttpStatus.OK + " GET Borrower 0");
 			return new ResponseEntity<Iterable<Borrower>>(result, HttpStatus.OK);
 		}
 	}
@@ -332,25 +332,31 @@ public class AdminController
 		Optional<Borrower> foundBorrower = admin.readBorrowerById(cardNo);
 		if(!foundBorrower.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Borrower");
+			logger.info(HttpStatus.NOT_FOUND + " GET Borrower " + cardNo);
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
+		
+		logger.info(HttpStatus.OK + " GET Borrower " + cardNo);
 
 		// FILLING IN THE COMPOSITE KEY 
 		Optional<LibraryBranch> foundBranch = admin.readLibraryBranchById(branchId);
 		if(!foundBranch.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET LibraryBranch");
+			logger.info(HttpStatus.NOT_FOUND + " GET LibraryBranch " + branchId);
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
+		
+		logger.info(HttpStatus.OK + " GET LibraryBranch " + branchId);
 
 		// FILLING IN THE COMPOSITE KEY 
 		Optional<Book> foundBook = admin.readBookById(bookId);
 		if(!foundBook.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET Book");
+			logger.info(HttpStatus.NOT_FOUND + " GET Book " + bookId);
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
+		
+		logger.info(HttpStatus.OK + " GET Book " + bookId);
 		
 		// see if this combination of keys exists
 		Optional<BookLoan> result = admin.readBookLoanById(
@@ -361,12 +367,12 @@ public class AdminController
 		
 		if(!result.isPresent()) 
 		{
-			logger.info(HttpStatus.NOT_FOUND + " GET BookLoan");
+			logger.info(HttpStatus.NOT_FOUND + " GET BookLoan -1");
 			return new ResponseEntity<BookLoan>(HttpStatus.NOT_FOUND);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET BookLoan");
+			logger.info(HttpStatus.OK + " GET BookLoan -1");
 			return new ResponseEntity<BookLoan>(result.get(), HttpStatus.OK);
 		}
 	}
@@ -379,12 +385,12 @@ public class AdminController
 		// 200 regardless of if we found it or not, the query was successful, it means they can keep doing it
 		if(!result.iterator().hasNext()) 
 		{
-			logger.info(HttpStatus.OK + " GET BookLoan");
+			logger.info(HttpStatus.OK + " GET BookLoan 0");
 			return new ResponseEntity<Iterable<BookLoan>>(result, HttpStatus.OK);
 		}
 		else
 		{
-			logger.info(HttpStatus.OK + " GET BookLoan");
+			logger.info(HttpStatus.OK + " GET BookLoan 0");
 			return new ResponseEntity<Iterable<BookLoan>>(result, HttpStatus.OK);
 		}
 	}
