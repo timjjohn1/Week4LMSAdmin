@@ -2,6 +2,8 @@ package com.ss.lms.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,10 +32,13 @@ public class AdminController
 {
 	@Autowired
 	AdminService admin;
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 	
 	@GetMapping(path = "")
 	public HttpStatus isUp() 
 	{
+		logger.warn("Im a warn!");
+		logger.error("Im a error!");
 		return HttpStatus.OK;
 	}
 	
