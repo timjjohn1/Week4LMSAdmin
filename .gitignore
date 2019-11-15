@@ -164,4 +164,7 @@ $RECYCLE.BIN/
 dockerfile
 .attach_pid*
 
+# All .log files
+*.log
+
 # End of https://www.gitignore.io/api/git,java,maven,eclipse,windows
